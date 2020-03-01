@@ -68,16 +68,16 @@ function execute(data){
     }
     
 }
-execute(`
+// execute(`
 
-for i:=0 to 10 do begin
-    if (i mod 2 = 0) then begin
-        writeln(i);
-    end;
-end;
+// for var i:=0 to 10 do begin
+//     if (i mod 2 = 0) then begin
+//         writeln(i);
+//     end;
+// end;
 
-`)
-exit();
+// `)
+// exit();
 function exit(data){
     process.exit()
 }

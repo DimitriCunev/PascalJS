@@ -60,7 +60,6 @@ function execute(data){
         matches = data.match(/if(?: |\()([^]+) then/);
     }
 
-    writeln(data);
     try {
         eval(data)
     } catch (error) {

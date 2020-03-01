@@ -5,9 +5,9 @@ Code translation from FreePascal or PascalABC to Javascript
 This is still in development and not ready for use.
 
 Current Progress:
-> Basic stuff (comparison and attrbutes translation)
-> For loops
-> If statement
+- Basic stuff (comparison and attrbutes translation)
+- For loops
+- If statement
 
 
 

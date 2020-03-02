@@ -1,5 +1,5 @@
 # PascalJS
-Code translation from FreePascal or PascalABC to Javascript
+Translated programming language with pascal-like syntax.
 
 
 This is still in development and not ready for use.

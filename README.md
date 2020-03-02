@@ -19,8 +19,10 @@ Current console commands:
 -> Pascal has many unused and probably not needed features for example:
 - declaring function type
 - using begin{}end. as main function
+
 that are replaced by my translator with simpler things.
 
+> I understand that pascal type declarations are there , to make pascal type-safe , but for ordinary problem solving , this would make things harder and un-necessary complex.
 
 Example translation:
 ```Pascal

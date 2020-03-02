@@ -28,8 +28,20 @@ function cprint (data){
 function execute(data){
     let matches
 
-    //Replace all instances of begin and end.
-    data = data.replace(/begin/g,`{`);data = data.replace(/end;/g,`}`);data = data.replace(/end./g,`}`);
+    //Replace all instances of begin and end;
+    // data = data.replace(/begin/g,`{`);data = data.replace(/end;/g,`}`);data = data.replace(/end./g,`}`);
+
+    matches =  data.match(/begin([^]+)end./)
+    while(matches){
+        data = data.replace(/begin([^]+)end\./,`${matches[1]}`)
+        matches = data.match(/begin([^]+)end\./,`${matches[1]}`)
+    }
+
+    matches =  data.match(/begin([^]+)end;/)
+    while(matches){
+        data = data.replace(/begin([^]+)end;/,`{${matches[1]}}`)
+        matches = data.match(/begin([^]+)end;/,`{${matches[1]}}`)
+    }
 
     //Replace simple things
     data = data.replace(/\w*(?<!:)=/g,'==');//comparisons
@@ -37,8 +49,29 @@ function execute(data){
     data = data.replace(/mod/g,'%');//modulus
     data = data.replace(/\w*(?<![A-Za-z])and(?![A-Za-z])/g,'&&');//modulus
     data = data.replace(/\w*(?<![A-Za-z])or(?![A-Za-z])/g,'||');//or
-    data = data.replace(/(:string|:ansistring|:char)/g,`='';`);//types
-    data = data.replace(/(:integer|:real|:longint|:double)/g,`=0;`);//types
+
+    //data = data.replace(/(:integer|:real|:longint|:double)/g,`=0;`);//types
+
+    //Replace string types
+    matches =  data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::string|:ansistring|:char)/)
+    while(matches){
+        data = data.replace(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::string|:ansistring|:char)/,`var ${matches[1]} = new String('')`)
+        matches = data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::string|:ansistring|:char)/)
+    }
+
+    //Replace integer types
+    matches =  data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(:integer|:real|:longint|:extended)/)
+    while(matches){
+        data = data.replace(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::integer|:real|:longint|:extended)/,`var ${matches[1]} = new Number(0)`)
+        matches = data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::integer|:real|:longint|:extended)/);
+    }  
+    
+    matches =  data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(:boolean)/)
+    while(matches){
+        data = data.replace(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::boolean)/,`var ${matches[1]} = new Boolean(false)`)
+        matches = data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?:boolean)/);
+    } 
+
     //Replace simple for loops
     matches = data.match(/for ([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?do/);
     while(matches){
@@ -59,7 +92,7 @@ function execute(data){
         data = data.replace(/if(?: |\()([^]+) then/,`if (${matches[1]})`)
         matches = data.match(/if(?: |\()([^]+) then/);
     }
-
+    writeln(data)
     try {
         eval(data)
     } catch (error) {
@@ -67,16 +100,19 @@ function execute(data){
     }
     
 }
-// execute(`
+execute(`
+var b:string;
+var c:integer;
+var c:boolean;
 
-// for var i:=0 to 10 do begin
-//     if (i mod 2 = 0) then begin
-//         writeln(i);
-//     end;
-// end;
-
-// `)
-// exit();
+begin
+    for var i:=0 to 10 do begin
+        if (i mod 2 = 0) then begin
+        end;
+    end;
+end.
+`)
+exit();
 function exit(data){
     process.exit()
 }

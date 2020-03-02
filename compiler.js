@@ -28,16 +28,10 @@ function cprint (data){
 function execute(data){
     let matches
 
-    //Replace all instances of begin and end;
-    data = data.replace(/begin/g,`{`);data = data.replace(/end;/g,`}`);data = data.replace(/end./g,`}`);
 
-    matches =  data.match(/begin([^]+)end./)
-    while(matches){
-        data = data.replace(/begin([^]+)end\./,`${matches[1]}`)
-        matches = data.match(/begin([^]+)end\./,`${matches[1]}`)
-    }
+    data = data.replace(/begin/g,`{`);data = data.replace(/end;/g,`}`);
 
-    data = data.replace(/begin/g,`{`);data = data.replace(/end;/g,`}`);data = data.replace(/end./g,`}`);
+    
 
     //Replace simple things
     data = data.replace(/\w*(?<!:)=/g,'==');//comparisons
@@ -53,6 +47,12 @@ function execute(data){
     while(matches){
         data = data.replace(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::string|:ansistring|:char)/,`var ${matches[1]} = new String('')`)
         matches = data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::string|:ansistring|:char)/)
+    }
+
+    matches =  data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::array)/)
+    while(matches){
+        data = data.replace(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::array)/,`var ${matches[1]} = new Array()`)
+        matches = data.match(/var(?:[ \t]+)*?([A-Za-z0-9]+)(?::array)/)
     }
 
     
@@ -71,17 +71,17 @@ function execute(data){
     } 
 
     //Replace simple for loops
-    matches = data.match(/for ([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?do/);
+    matches = data.match(/for ([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?do/);
     while(matches){
-        data = data.replace(/for ([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?do/,`for (${matches[1]}=${matches[2]};i<${matches[3]};${matches[1]}++)`)
-        matches = data.match(/for ([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?do/);
+        data = data.replace(/for ([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?do/,`for (${matches[1]}=${matches[2]};i<${matches[3]};${matches[1]}++)`)
+        matches = data.match(/for ([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?do/);
     }
 
     //Replace advanced for loops
-    matches = data.match(/for(?:[ \t]+)var(?:[ \t]+)([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?do/);
+    matches = data.match(/for(?:[ \t]+)var(?:[ \t]+)([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?do/);
     while(matches){
-        data = data.replace(/for(?:[ \t]+)var(?:[ \t]+)([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?do/,`for (var ${matches[1]}=${matches[2]};i<${matches[3]};${matches[1]}++)`)
-        matches = data.match(/for(?:[ \t]+)var(?:[ \t]+)([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([0-9]+)(?:[ \t]+)*?do/);
+        data = data.replace(/for(?:[ \t]+)var(?:[ \t]+)([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?do/,`for (var ${matches[1]}=${matches[2]};i<${matches[3]};${matches[1]}++)`)
+        matches = data.match(/for(?:[ \t]+)var(?:[ \t]+)([^ =])(?:[ \t]+)*?=(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?to(?:[ \t]+)*?([A-Za-z0-9]+)(?:[ \t]+)*?do/);
     }
 
     //Replace if statement
@@ -93,12 +93,15 @@ function execute(data){
 
 
     //functions
-    matches =  data.match(/(?:procedure|function)[ \t]+([A-Za-z0-9]+)\(([^\)]+)\):[^;]+;/)
+    matches =  data.match(/(?:procedure|function)[ \t]+([A-Za-z0-9]+)\(([^\)]+)*?\):[^;]+;/)
      while(matches){
-        matches[2] = matches[2].replace(/(?::integer|:real|:longint|:extended|:boolean|:string|:ansistring|:char)+/g,'')
-        matches[2] = matches[2].replace(/;/g,',')
-        data = data.replace(/(?:procedure|function)[ \t]+([A-Za-z0-9]+)\(([^\)]+)\):[^;]+;/,`function ${matches[1]}(${matches[2]})`)
-        matches = data.match(/(?:procedure|function)[ \t]+([A-Za-z0-9]+)\(([^\)]+)\):[^;]+;/)
+        if(matches[2]){
+            matches[2] = matches[2].replace(/(?::integer|:real|:longint|:extended|:boolean|:string|:ansistring|:char)+/g,'')
+            matches[2] = matches[2].replace(/;/g,',')
+        } else matches[2] = ''
+        
+        data = data.replace(/(?:procedure|function)[ \t]+([A-Za-z0-9]+)\(([^\)]+)*?\):[^;]+;/,`function ${matches[1]}(${matches[2]})`)
+        matches = data.match(/(?:procedure|function)[ \t]+([A-Za-z0-9]+)\(([^\)]+)*?\):[^;]+;/)
     }
 
     writeln(data)
@@ -110,28 +113,25 @@ function execute(data){
     
 }
 // execute(`
-// var b:string;
-// var c:integer;
-// var c:boolean;
 
-// function abc(a,b,c:integer;d:string):integer;
-// begin
-//     writeln('yo');
-//     writeln('kahlito!');
-// end;
 
-// procedure abcd(a,b,c:integer;d:string):integer;
+// function allDivisors(n:integer):integer;
 // begin
-//     writeln('yo');
-//     writeln('kahlito!');
-// end;
-
-// begin
-//     for var i:=0 to 10 do begin
-//         if (i mod 2 = 0) then begin
-//         end;
+//     var divisors:array;
+//     for var i:=1 to n do begin
+//         if n mod i = 0 then divisors.push(i);
 //     end;
-// end.
+//     return divisors;
+// end;
+
+
+// function main():integer;
+// begin
+//     writeln(allDivisors(25));
+// end;
+
+
+// main();
 // `)
 // exit();
 function exit(data){

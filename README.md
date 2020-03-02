@@ -4,7 +4,7 @@ Translated programming language with pascal-like syntax.
 
 This is still in development and not ready for use.
 
-> This project has been made so i can learn RegEx better.
+> This project has been made so i can learn regex better.
 
 Current Progress:
 - Basic stuff (comparison and attrbutes translation)
@@ -16,31 +16,50 @@ Current console commands:
 - execute(code) - translates code and runs it.
 - clearConsole() - clears console
 
+-> Pascal has many unused and probably not needed features for example:
+- declaring function type
+- using begin{}end. as main function
+that are replaced by my translator with simpler things.
+
+
 Example translation:
 ```Pascal
-var b:string;
-var c:integer;
-var c:boolean;
 
+function allDivisors(n:integer):integer;
 begin
-    for var i:=0 to 10 do begin
-        if (i mod 2 = 0) then begin
-        end;
+    var divisors:array;
+    for var i:=1 to n do begin
+        if n mod i = 0 then divisors.push(i);
     end;
-end.
+    return divisors;
+end;
+
+
+function main():integer;
+begin
+    writeln(allDivisors(25));
+end;
+
 ```
-
+Translated code:
 ```Javascript
-var b = new String('');
-var c = new Number(0);
-var c = new Boolean(false);
-
-
-for (var i=0;i<10;i++) {
-    if ((i % 2 == 0)) {
+function allDivisors(n)
+{
+    var divisors = new Array();
+    for (var i=1;i<n;i++) {
+        if (n % i == 0) divisors.push(i);
     }
+    return divisors;
 }
 
+
+function main()
+{
+    writeln(allDivisors(25));
+}
+
+
+main();
 
 //writeln function is made inside the "compiler"
 ```

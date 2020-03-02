@@ -18,19 +18,29 @@ Current console commands:
 
 Example translation:
 ```Pascal
-for var i:=0 to 10 do begin
-    if (i mod 2 = 0) then begin
-        writeln(i);
+var b:string;
+var c:integer;
+var c:boolean;
+
+begin
+    for var i:=0 to 10 do begin
+        if (i mod 2 = 0) then begin
+        end;
     end;
-end;
+end.
 ```
 
 ```Javascript
-for (i=0;i<10;i++) {
+var b = new String('');
+var c = new Number(0);
+var c = new Boolean(false);
+
+
+for (var i=0;i<10;i++) {
     if ((i % 2 == 0)) {
-        writeln(i);
     }
 }
+
 
 //writeln function is made inside the "compiler"
 ```

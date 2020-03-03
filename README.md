@@ -108,7 +108,7 @@ main();
 ```
 
 
-### No need pascal formalities.
+### No need for pascal formalities.
 
 ```Pascal
 writeln('Hello world!');

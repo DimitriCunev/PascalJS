@@ -34,11 +34,26 @@ function execute(data){
     
 
     //Replace simple things
+    data = data.replace(/=>/g,'^^^{arrowFunction}'); //js stuff
+    data = data.replace(/\+=/g,'^^^{additionStuff}'); //js stuff
+    data = data.replace(/\-=/g,'^^^{subtractionStuff}'); //js stuff
+    data = data.replace(/\*=/g,'^^^{multiplicationStuff}'); //js stuff
+    data = data.replace(/\\=/g,'^^^{divisionStuff}'); //js stuff
+
     data = data.replace(/\w*(?<!:)=/g,'==');//comparisons
     data = data.replace(/:=/g,'=');//atributions
     data = data.replace(/mod/g,'%');//modulus
     data = data.replace(/\w*(?<![A-Za-z])and(?![A-Za-z])/g,'&&');//modulus
     data = data.replace(/\w*(?<![A-Za-z])or(?![A-Za-z])/g,'||');//or
+
+
+
+    //Reversion.
+    data = data.replace(/\^\^\^\{arrowFunction\}/g,'=>');
+    data = data.replace(/\^\^\^\{additionStuff\}/g,'+=');
+    data = data.replace(/\^\^\^\{subtractionStuff\}/g,'-=');
+    data = data.replace(/\^\^\^\{multiplicationStuff\}/g,'*=');
+    data = data.replace(/\^\^\^\{arrowFuncdivisionStufftion\}/g,'\\=');
 
     //data = data.replace(/(:integer|:real|:longint|:double)/g,`=0;`);//types
 
@@ -115,19 +130,14 @@ function execute(data){
 // execute(`
 
 
-// function allDivisors(n:integer):integer;
-// begin
-//     var divisors:array;
-//     for var i:=1 to n do begin
-//         if n mod i = 0 then divisors.push(i);
-//     end;
-//     return divisors;
-// end;
-
-
 // function main():integer;
 // begin
-//     writeln(allDivisors(25));
+//     var s:string;
+//     s+=1;
+//     s+=23;
+//     writeln(s);
+
+//     // 123
 // end;
 
 

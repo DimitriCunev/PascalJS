@@ -65,3 +65,51 @@ main();
 
 //writeln function is made inside the "compiler"
 ```
+
+
+## Some example of usage
+
+### Javascript arrow function implementation
+
+```Pascal
+function main():integer;
+begin
+    var a:array;
+    for var i :=1 to 5 do begin
+        a.push(i)
+
+    end;
+
+    a.forEach((e)=>{
+        writeln(e)
+    })
+end;
+
+
+main();
+```
+
+
+### Javascript += -= *= /= with Pascal syntax.
+
+```Pascal
+function main():integer;
+begin
+    var s:string;
+    s+=1;
+    s+=23;
+    writeln(s);
+
+    // 123
+end;
+
+
+main();
+```
+
+
+### No need pascal formalities.
+
+```Pascal
+writeln('Hello world!');
+```
